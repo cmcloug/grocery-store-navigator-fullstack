@@ -16,6 +16,8 @@ def main():
 
     grocery_list = ["milk", "bread", "eggs", "chicken", "rice"]
 
+    aisle_list = {}
+
     for item in grocery_list:
         print(f"\n🔍 Searching for: {item}...")
         results = search_product(token, item, store_id)
@@ -30,10 +32,12 @@ def main():
             try:
                 aisle_data = product["aisleLocations"][0]
                 aisle = aisle_data.get("number", "N/A")
+                aisle_list.update({name: int(aisle)})
             except (KeyError, IndexError):
                 pass
+    sorted_by_aisle = {k: v for k, v in sorted(aisle_list.items(), key = lambda v: v[1])}
+    print(sorted_by_aisle)
 
-            print(f"🛍️  {name} — Aisle: {aisle}")
 
 if __name__ == "__main__":
     main()

@@ -24,15 +24,21 @@ It lets you import your grocery list, search for items in nearby stores, and (in
 Grocery Store Navigator/
 │
 ├── .env # Your Kroger API credentials (never commit this!)
+
 ├── kroger_api.py # Handles Kroger API authentication and requests
+
 ├── main.py # Core app logic (list management, route planning)
+
 ├── requirements.txt # Python dependencies
+
 ├── README.md # You are here!
+
 └── venv/ # Virtual environment (ignored by Git)
+
 
 Future Roadmap
 
-🗺️ Visual in-store map and pathfinding
+🗺️ Visual components/application to full front end
 
 🛍️ Support for other APIs (Walmart, Target)
 

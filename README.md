@@ -22,7 +22,9 @@ It lets you import your grocery list, search for items in nearby stores, and (in
 ## 🧰 Project Structure
 
 Grocery Store Navigator/
+
 │
+
 ├── .env # Your Kroger API credentials (never commit this!)
 
 ├── kroger_api.py # Handles Kroger API authentication and requests

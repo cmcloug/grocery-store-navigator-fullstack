@@ -4,7 +4,8 @@
 [![Status](https://img.shields.io/badge/status-in%20development-orange)]()
 
 **Grocery Store Navigator** is an intelligent grocery shopping assistant that connects to real store data.  
-It lets you import your grocery list, search for items in nearby stores, and (in the future) automatically generate the **most efficient route** through the aisles.
+It lets you import your grocery list, search for items in nearby stores, and automatically generate the **most efficient route** through the aisles.
+Currently, the frontend is in development however the backend can still be used through the terminal.
 
 ---
 

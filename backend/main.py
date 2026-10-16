@@ -1,43 +1,71 @@
-from kroger_api import get_access_token, search_product, find_store
+import argparse
+import sys
+
+from kroger_api import KrogerError, get_access_token, get_stores, search_product
+from routing import build_route
+
+DEFAULT_LIST = ["milk", "bread", "eggs", "chicken", "rice"]
+
+
+def read_grocery_list(path):
+    """Read one item per line from a file, or fall back to the default list."""
+    if not path:
+        return DEFAULT_LIST
+    with open(path) as f:
+        items = [line.strip() for line in f if line.strip()]
+    return items or DEFAULT_LIST
+
+
+def choose_store(stores):
+    for i, s in enumerate(stores, 1):
+        print(f"OPTION {i} {s['name']} — {s['address']}, {s['city']} (ID: {s['id']})")
+    while True:
+        choice = input("Enter your desired store number: ").strip()
+        if choice.isdigit() and 1 <= int(choice) <= len(stores):
+            return stores[int(choice) - 1]["id"]
+        print(f"Please enter a number between 1 and {len(stores)}.")
+
 
 def main():
-    print("🛒 Grocery Store Navigator - Kroger API Demo\n")
+    parser = argparse.ArgumentParser(description="Grocery Store Navigator")
+    parser.add_argument("-l", "--list", help="text file with one grocery item per line")
+    parser.add_argument("-z", "--zip", help="ZIP code to search near")
+    args = parser.parse_args()
 
-    token = get_access_token()
-    if not token:
-        print("❌ Failed to get access token. Check your credentials.")
-        return
-    print("✅ Access token acquired!\n")
+    print("🛒 Grocery Store Navigator\n")
+    try:
+        token = get_access_token()
+        zip_code = args.zip or input("Enter your ZIP code: ").strip()
+        stores = get_stores(token, zip_code)
+        if not stores:
+            print("❌ No stores found for that ZIP code.")
+            return 1
+        store_id = choose_store(stores)
 
-    zip_code = input("Enter your ZIP code to find nearby Kroger stores: ")
-    store_id = find_store(token, zip_code)
-    if not store_id:
-        return
+        matches, not_found = [], []
+        for item in read_grocery_list(args.list):
+            print(f"🔍 Searching for: {item}...")
+            products = search_product(token, item, store_id, limit=1).get("data", [])
+            if not products:
+                not_found.append(item)
+                continue
+            product = products[0]
+            aisles = product.get("aisleLocations") or [None]
+            matches.append((product["description"], aisles[0]))
+    except (KrogerError, OSError) as exc:
+        print(f"❌ {exc}")
+        return 1
 
-    grocery_list = ["milk", "bread", "eggs", "chicken", "rice"]
-
-    aisle_list = {}
-
-    for item in grocery_list:
-        print(f"\n🔍 Searching for: {item}...")
-        results = search_product(token, item, store_id)
-
-        if "data" not in results or not results["data"]:
-            print(f"❌ No results found for '{item}'")
-            continue
-
-        for product in results["data"][:1]:
-            name = product["description"]
-            aisle = "N/A"
-            try:
-                aisle_data = product["aisleLocations"][0]
-                aisle = aisle_data.get("number", "N/A")
-                aisle_list.update({name: int(aisle)})
-            except (KeyError, IndexError):
-                pass
-    sorted_by_aisle = {k: v for k, v in sorted(aisle_list.items(), key = lambda v: v[1])}
-    print(sorted_by_aisle)
+    route, unplaced = build_route(matches)
+    print("\n🧭 Your route:")
+    for aisle, names in route:
+        print(f"  Aisle {aisle}: {', '.join(names)}")
+    if unplaced:
+        print(f"\n❓ No aisle info (check the store): {', '.join(unplaced)}")
+    if not_found:
+        print(f"\n❌ Not found: {', '.join(not_found)}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

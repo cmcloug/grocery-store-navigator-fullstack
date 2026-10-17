@@ -5,7 +5,7 @@
 
 Grocery Store Navigator connects to real Kroger store data. Give it a grocery list and a ZIP code, and it finds your items in a nearby store and orders them by aisle so you can walk one efficient pass through the store.
 
-The frontend is still a work in progress. The backend is fully usable from the terminal.
+Use it from the terminal (CLI) or through the React web app.
 
 ## Features
 
@@ -20,13 +20,14 @@ The frontend is still a work in progress. The backend is fully usable from the t
 ```
 ├── backend/
 │   ├── main.py              # CLI entry point
+│   ├── app.py               # Flask API used by the frontend
 │   ├── kroger_api.py        # Kroger auth, store and product requests
 │   ├── routing.py           # Pure aisle-ordering logic
 │   ├── tests/               # pytest tests
 │   ├── .env.example         # Template for API credentials
 │   ├── requirements.txt
 │   └── requirements-dev.txt
-└── frontend/                # React app (in development)
+└── frontend/                # React + Vite web app
 ```
 
 ## Getting started
@@ -49,7 +50,18 @@ The frontend is still a work in progress. The backend is fully usable from the t
 
    Both flags are optional: you'll be prompted for a ZIP code, and a default list is used if `--list` is omitted.
 
-4. Run the tests:
+4. Or run the web app (two terminals):
+
+   ```bash
+   # terminal 1, in backend/
+   python app.py
+   # terminal 2, in frontend/
+   npm install && npm run dev
+   ```
+
+   Then open http://localhost:5173.
+
+5. Run the tests:
 
    ```bash
    pip install -r requirements-dev.txt
@@ -58,7 +70,6 @@ The frontend is still a work in progress. The backend is fully usable from the t
 
 ## Roadmap
 
-- Connect the React frontend to the backend through an HTTP API
 - Support other retailers (Walmart, Target)
 - Mobile version with live store layout
 - Smart recommendations and substitutions

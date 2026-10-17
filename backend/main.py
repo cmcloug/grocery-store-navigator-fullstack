@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from kroger_api import KrogerError, get_access_token, get_stores, search_product
+from kroger_api import KrogerError, get_access_token, find_items, get_stores
 from routing import build_route
 
 DEFAULT_LIST = ["milk", "bread", "eggs", "chicken", "rice"]
@@ -41,17 +41,11 @@ def main():
             print("❌ No stores found for that ZIP code.")
             return 1
         store_id = choose_store(stores)
+        items = read_grocery_list(args.list)
 
-        matches, not_found = [], []
-        for item in read_grocery_list(args.list):
+        for item in items:
             print(f"🔍 Searching for: {item}...")
-            products = search_product(token, item, store_id, limit=1).get("data", [])
-            if not products:
-                not_found.append(item)
-                continue
-            product = products[0]
-            aisles = product.get("aisleLocations") or [None]
-            matches.append((product["description"], aisles[0]))
+        matches, not_found = find_items(token, store_id, items)
     except (KrogerError, OSError) as exc:
         print(f"❌ {exc}")
         return 1

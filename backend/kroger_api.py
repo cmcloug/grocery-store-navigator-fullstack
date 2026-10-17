@@ -85,3 +85,17 @@ def get_stores(token, zip_code, limit=5):
         }
         for s in data.get("data", [])
     ]
+
+
+def find_items(token, store_id, items):
+    """Look up each item; return (matches, not_found) for routing.build_route."""
+    matches, not_found = [], []
+    for item in items:
+        products = search_product(token, item, store_id, limit=1).get("data", [])
+        if not products:
+            not_found.append(item)
+            continue
+        product = products[0]
+        aisles = product.get("aisleLocations") or [None]
+        matches.append((product["description"], aisles[0]))
+    return matches, not_found

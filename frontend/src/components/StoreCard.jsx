@@ -1,19 +1,15 @@
-function StoreCard({ store }) {
-  function onSelectClick() {
-    alert("clicked");
-  }
-
+function StoreCard({ store, selected, onSelect }) {
   return (
-    <div className="store-card">
-      <div className="store-overlay">
-        <button className="select-btn" onClick={onSelectClick}>
-          Select Store
-        </button>
-      </div>
+    <div className={`store-card${selected ? " selected" : ""}`}>
       <div className="store-info">
         <h3>{store.name}</h3>
-        <p>{store.location}</p>
+        <p>
+          {store.address}, {store.city}
+        </p>
       </div>
+      <button onClick={() => onSelect(store)} disabled={selected}>
+        {selected ? "Selected" : "Select Store"}
+      </button>
     </div>
   );
 }

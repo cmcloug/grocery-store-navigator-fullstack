@@ -12,6 +12,7 @@ Use it from the terminal (CLI) or through the React web app.
 - Read a grocery list from a text file (one item per line)
 - Find nearby Kroger stores by ZIP code
 - Look up each item with the Kroger API
+- Draw a schematic store map with your walking route (web app)
 - Print a route sorted by aisle, with items in the same aisle grouped together
 - Report items that weren't found or have no aisle information
 

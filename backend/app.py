@@ -42,7 +42,7 @@ def route():
     matches, not_found = find_items(token(), store_id, items)
     route_, unplaced = build_route(matches)
     return jsonify(
-        route=[{"aisle": a, "items": names} for a, names in route_],
+        route=route_,
         unplaced=unplaced,
         not_found=not_found,
     )

@@ -1,12 +1,15 @@
+import FloorPlan from "./FloorPlan";
+
 function RouteView({ result }) {
   const { route, unplaced, not_found } = result;
   return (
     <div>
+      {route.length > 0 && <FloorPlan route={route} />}
       <ol className="route">
         {route.map((stop) => (
-          <li key={stop.aisle}>
-            <span className="aisle">Aisle {stop.aisle}</span>
-            <span>{stop.items.join(", ")}</span>
+          <li key={stop.label}>
+            <span className="aisle">{stop.label}</span>
+            <span>{stop.items.map((i) => i.name).join(", ")}</span>
           </li>
         ))}
       </ol>

@@ -108,3 +108,27 @@ button.primary {
   background: #fdecea;
   color: #b71c1c;
 }
+
+.floorplan { margin: 0 0 1.5rem; }
+.floorplan-scroll { overflow-x: auto; }
+.floorplan svg { display: block; width: 100%; min-width: 620px; height: auto; }
+.floorplan figcaption { font-size: 0.8rem; opacity: 0.7; margin-top: 0.4rem; }
+.fp-wall { fill: var(--card); stroke: var(--border); stroke-width: 3; }
+.fp-shelf { fill: var(--border); opacity: 0.5; }
+.fp-shelf.active { opacity: 1; }
+.fp-aisle-label, .fp-label { fill: currentColor; font-size: 11px; opacity: 0.7; }
+.fp-route {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fp-route { stroke-dashoffset: 1; animation: fp-draw 2.5s ease-out forwards; }
+}
+@keyframes fp-draw { to { stroke-dashoffset: 0; } }
+.fp-dot { fill: var(--accent); stroke: var(--bg); stroke-width: 1.5; }
+.fp-badge { fill: var(--accent); }
+.fp-badge-text { fill: var(--accent-fg); font-size: 11px; font-weight: 700; }
